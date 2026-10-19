@@ -1,6 +1,7 @@
 name: exe1
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'exe1/main.c'
