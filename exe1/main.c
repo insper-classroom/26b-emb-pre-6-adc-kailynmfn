@@ -10,12 +10,16 @@ SemaphoreHandle_t xPrintfMutex;
 
 void task_a(void *p) {
     while (true) {
-        // TODO: obtenha xPrintfMutex antes de usar o printf.
-        printf("Task A: inicio da mensagem\n");
-        vTaskDelay(pdMS_TO_TICKS(50));
-        printf("Task A: fim da mensagem\n");
-        // TODO: libere xPrintfMutex apos terminar de usar o printf.
-
+        // obtenha xPrintfMutex antes de usar o printf.
+        if (xSemaphoreTake(xPrintfMutex, pdMS_TO_TICKS(100)) == pdTRUE) {
+            
+            printf("Task A: inicio da mensagem\n");
+            vTaskDelay(pdMS_TO_TICKS(50));
+            printf("Task A: fim da mensagem\n");
+            
+            // libere xPrintfMutex apos terminar de usar o printf.
+            xSemaphoreGive(xPrintfMutex);
+        }
         vTaskDelay(pdMS_TO_TICKS(200));
     }
 }
@@ -35,7 +39,8 @@ void task_b(void *p) {
 int main() {
     stdio_init_all();
 
-    // TODO: crie o mutex e armazene-o em xPrintfMutex.
+    // crie o mutex e armazene-o em xPrintfMutex.
+    xPrintfMutex = xSemaphoreCreateMutex();
 
     xTaskCreate(task_a, "Task A", 1024, NULL, 1, NULL);
     xTaskCreate(task_b, "Task B", 1024, NULL, 1, NULL);
