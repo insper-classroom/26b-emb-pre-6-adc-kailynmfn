@@ -5,8 +5,8 @@
 #include "hardware/adc.h"
 
 const int PIN_LED_B = 4;
-const int PIN_ADC = 26;      // GP26 = canal 0 (confira no diagram.json)
-const int ADC_CHANNEL = 0;
+const int PIN_ADC = 28;      
+const int ADC_CHANNEL = 2;
 
 const float conversion_factor = 3.3f / (1 << 12);
 
