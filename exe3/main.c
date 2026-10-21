@@ -25,13 +25,26 @@ void data_task(void *p) {
 
 void process_task(void *p) {
     int data = 0;
+    int window[5] = {0};
 
     while (true) {
         if (xQueueReceive(xQueueData, &data, 100)) {
             // implementar filtro aqui!
 
+            // 1) deslocar a janela: cada valor anda uma casa para trás
+            for (int i = 0; i < 4; i++) {
+                window[i] = window[i + 1];
+            }
+            window[4] = data;   // amostra nova na posição livre
 
+            // 2) somar os 5 valores da janela
+            int soma = 0;
+            for (int i = 0; i < 5; i++) {
+                soma += window[i];
+            }
 
+            // 3) média e impressão
+            printf("%d\n", soma / 5);
 
             // deixar esse delay!
             vTaskDelay(pdMS_TO_TICKS(50));
